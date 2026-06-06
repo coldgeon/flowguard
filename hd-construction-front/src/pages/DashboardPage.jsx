@@ -131,6 +131,15 @@ function DashboardPage({
     result: { t7: "보조 하차 B 도착", t12: "대기 후 재진입", queue: "대기열 3대", zone: "병목 완화" },
   };
   const telemetry = telemetryByStage[stageId] || telemetryByStage.normal;
+  const sitePhotoUrl = `${import.meta.env.BASE_URL}site-aerial.png`;
+  const equipmentUnits = [
+    { id: "EX-A", name: "굴착기 A", kind: "excavator", status: "상차 중", className: "unit-exa", target: "load-wait" },
+    { id: "T7", name: "덤프트럭 7", kind: "truck", status: telemetry.t7, className: "unit-t7", target: "dump-a" },
+    { id: "T12", name: "덤프트럭 12", kind: "truck", status: telemetry.t12, className: "unit-t12", target: "dump-a" },
+    { id: "T18", name: "덤프트럭 18", kind: "truck", status: "순환 운행", className: "unit-t18", target: "haul-2" },
+    { id: "W04", name: "작업자 W04", kind: "worker", status: isDanger ? "접근 주의" : "순찰", className: "unit-w04", target: "dump-a" },
+    { id: "D1", name: "도저 D1", kind: "dozer", status: "노면 정리", className: "unit-d1", target: "haul-2" },
+  ];
 
   return (
     <section className="workspace xite-dashboard-page">
@@ -174,54 +183,32 @@ function DashboardPage({
             <h3>현장 실시간 모니터링</h3>
             <div className="xite-legend"><span className="normal">정상</span><span className="warn">주의</span><span className="danger">위험</span></div>
           </div>
-          <div className={`xite-map-canvas live-map stage-${stageId} ${liveMode ? "is-live" : ""}`} aria-label="현장 실시간 모니터링 맵" style={{ "--tick": simTick % 8 }}>
-            <svg className="site-plan-map" viewBox="0 0 1000 420" preserveAspectRatio="none" aria-hidden="true">
-              <defs>
-                <linearGradient id="siteSoil" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#d9cfb4" stopOpacity="0.92" />
-                  <stop offset="100%" stopColor="#b9a67c" stopOpacity="0.88" />
-                </linearGradient>
-                <linearGradient id="siteGreen" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#d8eee2" stopOpacity="0.94" />
-                  <stop offset="100%" stopColor="#b8d8c8" stopOpacity="0.92" />
-                </linearGradient>
-                <linearGradient id="siteRoad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#7f8f91" stopOpacity="0.52" />
-                  <stop offset="52%" stopColor="#4f5d61" stopOpacity="0.62" />
-                  <stop offset="100%" stopColor="#7f8f91" stopOpacity="0.52" />
-                </linearGradient>
-                <linearGradient id="siteBypassRoad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#007a4d" stopOpacity="0.24" />
-                  <stop offset="52%" stopColor="#007a4d" stopOpacity="0.58" />
-                  <stop offset="100%" stopColor="#007a4d" stopOpacity="0.24" />
-                </linearGradient>
-              </defs>
-
-              <polygon className="work-area excavation-area" points="96,84 358,58 482,132 322,214 84,178" />
-              <polygon className="work-area dump-yard-a" points="668,88 902,104 930,250 686,278 610,180" />
-              <polygon className="work-area dump-yard-b" points="116,276 376,248 442,344 152,374" />
-
-              <path className="site-road road-main" d="M150 146 C310 176 472 224 620 250 C742 272 832 254 928 224" />
-              <path className="site-road road-return" d="M128 324 C314 292 480 250 642 204 C744 174 840 142 932 122" />
-              <path className="site-road road-bypass" d="M704 236 C564 286 398 326 142 346" />
-
-              <text className="site-map-label label-exa" x="246" y="104">상차 구역</text>
-              <text className="site-map-label label-haul" x="418" y="206">주 운반로</text>
-              <text className="site-map-label label-dump" x="724" y="128">하차장 A</text>
-              <text className="site-map-label label-bypass" x="176" y="304">보조 하차 B</text>
-            </svg>
-
+          <div className={`xite-map-canvas live-map photo-site-map stage-${stageId} ${liveMode ? "is-live" : ""}`} aria-label="현장 실시간 모니터링 맵" style={{ "--tick": simTick % 8 }}>
+            <img className="site-photo-bg" src={sitePhotoUrl} alt="" />
+            <div className="site-photo-shade" aria-hidden="true" />
+            <div className="aerial-command-panel">
+              <strong>RTK LIVE</strong>
+              <span>{telemetry.queue}</span>
+              <span>T7 · {telemetry.t7}</span>
+              <span>T12 · {telemetry.t12}</span>
+            </div>
             <div className="map-zone-status">{telemetry.zone}</div>
-            <button className="map-node node-green node-1" type="button" onClick={() => onSelectBottleneck("load-wait")}>상차</button>
-            <button className="map-node node-green node-2" type="button" onClick={() => onSelectBottleneck("exc-b")}>EX-B</button>
-            <button className="map-node node-orange node-3" type="button" onClick={() => onSelectBottleneck("haul-2")}>운반</button>
+            <button className="aerial-zone aerial-zone-load" type="button" onClick={() => onSelectBottleneck("load-wait")}>상차 구역</button>
+            <button className="aerial-zone aerial-zone-haul" type="button" onClick={() => onSelectBottleneck("haul-2")}>주 운반로</button>
+            <button className="aerial-zone aerial-zone-bypass" type="button" onClick={() => onSelectBottleneck("exc-b")}>보조 하차 B</button>
             <button className={`map-bottleneck-zone ${isDanger ? "danger" : "normal"}`} type="button" onClick={() => onSelectBottleneck("dump-a")}>
-              <span>{isDanger ? "병목" : "관찰"}</span>
+              <span>{isDanger ? "하차장 A 병목" : "하차장 A 관찰"}</span>
               <i />
             </button>
-            <div className="map-truck truck-t7"><span>T7</span></div>
-            <div className="map-truck truck-t12"><span>T12</span></div>
-            <div className="map-truck truck-t18"><span>T18</span></div>
+            <div className="aerial-flow flow-main" aria-hidden="true" />
+            <div className="aerial-flow flow-bypass" aria-hidden="true" />
+            {equipmentUnits.map((unit) => (
+              <button className={`aerial-equipment ${unit.kind} ${unit.className}`} key={unit.id} type="button" onClick={() => onSelectBottleneck(unit.target)}>
+                <span className={`equipment-icon ${unit.kind}`} aria-hidden="true"><i /><b /></span>
+                <span className="equipment-label"><strong>{unit.id}</strong><small>{unit.name}</small></span>
+                <em>{unit.status}</em>
+              </button>
+            ))}
           </div>
         </section>
 
