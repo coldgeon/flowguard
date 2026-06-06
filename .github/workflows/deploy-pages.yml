@@ -36,6 +36,9 @@ jobs:
           cache: pnpm
           cache-dependency-path: hd-construction-front/pnpm-lock.yaml
 
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
