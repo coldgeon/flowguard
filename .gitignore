@@ -1,0 +1,9 @@
+archive/
+
+hd-construction-front/node_modules/
+hd-construction-front/dist/
+
+.env
+.env.*
+.DS_Store
+Thumbs.db
