@@ -12493,6 +12493,59 @@ main {
   top: 66% !important;
 }
 
+/* Final photo-map framing: keep the aerial site visible on laptop screens. */
+.app.app-dashboard .xite-dashboard-page {
+  grid-template-rows: auto auto 44px minmax(0, auto) minmax(96px, auto) !important;
+  gap: 10px !important;
+}
+
+.app.app-dashboard .xite-main-grid {
+  min-height: clamp(374px, calc(100vh - 382px), 500px) !important;
+  gap: 14px !important;
+  grid-template-columns: minmax(0, 1fr) 348px !important;
+}
+
+.app.app-dashboard .xite-map-panel,
+.app.app-dashboard .xite-detail-panel {
+  height: clamp(374px, calc(100vh - 382px), 500px) !important;
+  min-height: clamp(374px, calc(100vh - 382px), 500px) !important;
+}
+
+.app.app-dashboard .xite-map-panel .xite-panel-head {
+  min-height: 54px !important;
+  padding: 0 18px !important;
+}
+
+.app.app-dashboard .xite-map-panel .xite-panel-head h3 {
+  font-size: 22px !important;
+}
+
+.app.app-dashboard .xite-map-canvas.photo-site-map {
+  height: calc(100% - 54px) !important;
+  min-height: 320px !important;
+}
+
+.app.app-dashboard .site-photo-bg {
+  object-position: 50% 55% !important;
+  transform: none !important;
+}
+
+.app.app-dashboard .photo-site-map .map-bottleneck-zone {
+  right: 15% !important;
+  top: 45% !important;
+  width: 158px !important;
+  height: 108px !important;
+}
+
+.app.app-dashboard .xite-log-panel {
+  min-height: 96px !important;
+  max-height: 130px !important;
+}
+
+.app.app-dashboard .xite-log-panel .xite-panel-head {
+  min-height: 40px !important;
+}
+
 /* Keep the diagnosis control-output card fully visible at laptop widths */
 .control-output-card {
   grid-template-rows: auto auto auto !important;
