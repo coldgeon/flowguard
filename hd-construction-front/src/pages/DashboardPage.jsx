@@ -131,7 +131,7 @@ function DashboardPage({
     result: { t7: "보조 하차 B 도착", t12: "대기 후 재진입", queue: "대기열 3대", zone: "병목 완화" },
   };
   const telemetry = telemetryByStage[stageId] || telemetryByStage.normal;
-  const sitePhotoUrl = `${import.meta.env.BASE_URL}site-aerial.png`;
+  const sitePhotoUrl = `${import.meta.env.BASE_URL}site-aerial.jpg`;
   const equipmentUnits = [
     { id: "EX-A", name: "굴착기 A", kind: "excavator", status: "상차 중", className: "unit-exa", target: "load-wait" },
     { id: "T7", name: "덤프트럭 7", kind: "truck", status: telemetry.t7, className: "unit-t7", target: "dump-a" },
